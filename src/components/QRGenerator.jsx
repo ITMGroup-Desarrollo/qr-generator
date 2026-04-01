@@ -143,8 +143,8 @@ export default function QRGenerator() {
                                 value={color}
                                 onChange={(e) => setColor(e.target.value)}
                             >
-                                <option value="negro">Negro</option>
-                                <option value="blanco">Blanco</option>
+                                <option value="negro" style={{ color: "#000000", background: "#ffffff" }}>Negro</option>
+                                <option value="blanco" style={{ color: "#000000", background: "#ffffff" }}>Blanco</option>
                             </select>
                         </div>
                     </div>
@@ -156,8 +156,8 @@ export default function QRGenerator() {
                                 value={format}
                                 onChange={(e) => setFormat(e.target.value)}
                             >
-                                <option value="PNG">PNG</option>
-                                <option value="SVG">SVG</option>
+                                <option value="PNG" style={{ color: "#000000", background: "#ffffff" }}>PNG</option>
+                                <option value="SVG" style={{ color: "#000000", background: "#ffffff" }}>SVG</option>
                             </select>
                         </div>
                     </div>
