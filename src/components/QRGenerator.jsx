@@ -26,7 +26,7 @@ export default function QRGenerator() {
         if (!input.trim()) return;
         setLoading(true);
 
-        const qrColor = color === "negro" ? "#1a2c5b" : "#ffffff";
+        const qrColor = color === "negro" ? "#000000" : "#ffffff";
         const bgColor = "transparent";
 
         try {
