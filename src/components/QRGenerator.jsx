@@ -109,7 +109,7 @@ export default function QRGenerator() {
         <div style={styles.page}>
             {/* Header */}
             <div style={styles.header}>
-                <img src="/imagenes/logo-ITM-Group.png" alt="ITM Group" style={styles.logo} />
+                <img src="imagenes/logo-ITM-Group.png" alt="ITM Group" style={styles.logo} />
                 <p style={styles.subtitle}>Generador de QR</p>
             </div>
 
