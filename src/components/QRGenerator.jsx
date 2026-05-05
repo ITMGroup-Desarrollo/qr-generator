@@ -3,7 +3,7 @@ import QRCode from "qrcode";
 
 export default function QRGenerator() {
     const [input, setInput] = useState("");
-    const [color, setColor] = useState("negro");
+    const [qrColor, setQrColor] = useState("#000000");
     const [format, setFormat] = useState("PNG");
     const [history, setHistory] = useState([]);
     const [modal, setModal] = useState(null); // { dataUrl, format }
@@ -26,9 +26,6 @@ export default function QRGenerator() {
         if (!input.trim()) return;
         setLoading(true);
 
-        const qrColor = color === "negro" ? "#000000" : "#ffffff";
-        const bgColor = "transparent";
-
         try {
             if (format === "PNG") {
                 const canvas = document.createElement("canvas");
@@ -41,7 +38,7 @@ export default function QRGenerator() {
                     },
                 });
                 const dataUrl = canvas.toDataURL("image/png");
-                const entry = { input, color, format, dataUrl, date: new Date().toLocaleString() };
+                const entry = { input, qrColor, format, dataUrl, date: new Date().toLocaleString() };
                 saveToHistory(entry);
                 setModal({ dataUrl, format: "PNG", input });
             } else {
@@ -58,7 +55,7 @@ export default function QRGenerator() {
                 const dataUrl = URL.createObjectURL(blob);
                 const entry = {
                     input,
-                    color,
+                    qrColor,
                     format,
                     dataUrl: `data:image/svg+xml;base64,${btoa(svgString)}`,
                     svgString,
@@ -131,21 +128,16 @@ export default function QRGenerator() {
                 {/* Color & Format */}
                 <div style={styles.row}>
                     <div style={{ flex: 1 }}>
-                        <label style={styles.label}>Color</label>
-                        <div style={styles.selectWrapper}>
-                            <span style={{
-                                ...styles.colorDot,
-                                background: color === "negro" ? "#1a2c5b" : "#ffffff",
-                                border: color === "blanco" ? "1px solid #ccc" : "none",
-                            }} />
-                            <select
-                                style={styles.select}
-                                value={color}
-                                onChange={(e) => setColor(e.target.value)}
-                            >
-                                <option value="negro" style={{ color: "#000000", background: "#ffffff" }}>Negro</option>
-                                <option value="blanco" style={{ color: "#000000", background: "#ffffff" }}>Blanco</option>
-                            </select>
+                        <label style={styles.label}>Color del QR</label>
+                        <div style={styles.colorWrapper}>
+                            <div style={{ ...styles.colorDot, background: qrColor }} />
+                            <span style={styles.colorHex}>{qrColor.toUpperCase()}</span>
+                            <input
+                                type="color"
+                                value={qrColor}
+                                onChange={(e) => setQrColor(e.target.value)}
+                                style={styles.colorInputHidden}
+                            />
                         </div>
                     </div>
                     <div style={{ flex: 1 }}>
@@ -192,7 +184,7 @@ export default function QRGenerator() {
                             <div key={i} style={styles.historyCard}>
                                 <div style={{
                                     ...styles.qrPreviewBg,
-                                    background: entry.color === "blanco" ? "#1a2c5b" : "#f0f4f8",
+                                    background: entry.qrColor === "#ffffff" ? "#1a2c5b" : "#f0f4f8",
                                 }}>
                                     <img
                                         src={entry.dataUrl}
@@ -221,7 +213,7 @@ export default function QRGenerator() {
                         <h3 style={styles.modalTitle}>✅ QR Generado</h3>
                         <div style={{
                             ...styles.qrModalBg,
-                            background: color === "blanco" ? "#1a2c5b" : "#f0f4f8",
+                            background: "#f0f4f8",
                         }}>
                             <img src={modal.dataUrl} alt="QR" style={styles.qrModalImg} />
                         </div>
@@ -302,6 +294,42 @@ const styles = {
         gap: "16px",
         marginBottom: "24px",
     },
+    colorWrapper: {
+        display: "flex",
+        alignItems: "center",
+        background: "#1a2c5b",
+        borderRadius: "8px",
+        padding: "0 12px",
+        gap: "8px",
+        height: "46px",
+        position: "relative",
+        overflow: "hidden",
+        cursor: "pointer",
+    },
+    colorDot: {
+        width: "14px",
+        height: "14px",
+        borderRadius: "50%",
+        flexShrink: 0,
+        border: "1px solid #ffffff44",
+    },
+    colorHex: {
+        color: "#ffffff",
+        fontSize: "13px",
+        fontFamily: "monospace",
+        flex: 1,
+    },
+    colorInputHidden: {
+        position: "absolute",
+        inset: 0,
+        width: "100%",
+        height: "100%",
+        opacity: 0,
+        cursor: "pointer",
+        border: "none",
+        padding: 0,
+        margin: 0,
+    },
     selectWrapper: {
         display: "flex",
         alignItems: "center",
@@ -309,12 +337,6 @@ const styles = {
         borderRadius: "8px",
         padding: "0 12px",
         gap: "8px",
-    },
-    colorDot: {
-        width: "14px",
-        height: "14px",
-        borderRadius: "50%",
-        flexShrink: 0,
     },
     select: {
         flex: 1,
